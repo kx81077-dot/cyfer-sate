@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>CYFER SHOP</title>
+  <style>
+    /* ========================================
+       リセット & ベーススタイル
+       ======================================== */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html {
+      font-family: 'Helvetica Neue', Arial, 'Hiragino Sans', sans-serif;
+      background: #000;
+      color: #fff;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      min-height: 100dvh;
+      overflow-x: hidden;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    /* ========================================
+       ページ読み込み時のフェードイン
+       ======================================== */
+    body {
+      animation: pageIn 0.8s ease-out both;
+    }
+
+    @keyframes pageIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+
+    /* ========================================
+       ヘッダー — CYFER SHOP ロゴ
+       ======================================== */
+    .header {
+      padding: 48px 24px 32px;
+      text-align: center;
+    }
+
+    .header__logo {
+      font-size: 32px;
+      font-weight: 700;
+      letter-spacing: 8px;
+      text-transform: uppercase;
+    }
+
+    .header__sub {
+      margin-top: 8px;
+      font-size: 11px;
+      letter-spacing: 4px;
+      color: rgba(255,255,255,0.4);
+      text-transform: uppercase;
+    }
+
+    /* 区切り線 */
+    .divider {
+      width: 40px;
+      height: 1px;
+      background: rgba(255,255,255,0.2);
+      margin: 32px auto;
+    }
+
+    /* ========================================
+       商品グリッド — モバイルファースト
+       ======================================== */
+    .products {
+      padding: 0 20px 60px;
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    .products__title {
+      font-size: 13px;
+      font-weight: 400;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.5);
+      margin-bottom: 24px;
+    }
+
+    .product-list {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 32px;
+    }
+
+    /* タブレット以上で2カラム */
+    @media (min-width: 600px) {
+      .product-list {
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+      }
+    }
+
+    /* デスクトップで3カラム */
+    @media (min-width: 900px) {
+      .product-list {
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 28px;
+      }
+    }
+
+    /* ========================================
+       商品カード
+       ======================================== */
+    .product-card {
+      display: block;
+      transition: transform 0.3s ease;
+    }
+
+    .product-card:active {
+      transform: scale(0.97);
+    }
+
+    /* 商品画像エリア（プレースホルダー） */
+    .product-card__image {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 3 / 4;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .product-card__placeholder {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* 商品シルエット（CSSのみで表現） */
+    .product-card__silhouette {
+      opacity: 0.15;
+      font-size: 80px;
+      line-height: 1;
+      user-select: none;
+    }
+
+    /* バッジ */
+    .product-card__badge {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      font-size: 9px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 4px 8px;
+      border: 1px solid rgba(255,255,255,0.3);
+      color: rgba(255,255,255,0.7);
+    }
+
+    /* 商品情報 */
+    .product-card__info {
+      padding: 14px 0 0;
+    }
+
+    .product-card__name {
+      font-size: 15px;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+      line-height: 1.4;
+    }
+
+    .product-card__detail {
+      margin-top: 4px;
+      font-size: 12px;
+      color: rgba(255,255,255,0.4);
+    }
+
+    .product-card__price {
+      margin-top: 8px;
+      font-size: 14px;
+      font-weight: 400;
+      letter-spacing: 1px;
+    }
+
+    /* ========================================
+       フッター
+       ======================================== */
+    .footer {
+      padding: 40px 24px;
+      text-align: center;
+      border-top: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .footer__text {
+      font-size: 10px;
+      letter-spacing: 2px;
+      color: rgba(255,255,255,0.25);
+      text-transform: uppercase;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== ヘッダー ===== -->
+  <header class="header">
+    <h1 class="header__logo">CYFER SHOP</h1>
+    <p class="header__sub">2026 Spring Collection</p>
+  </header>
+
+  <div class="divider"></div>
+
+  <!-- ===== 商品一覧 ===== -->
+  <section class="products">
+    <p class="products__title">Products</p>
+
+    <div class="product-list">
+
+      <!-- 商品1: ロゴTシャツ -->
+      <a href="#" class="product-card">
+        <div class="product-card__image">
+          <div class="product-card__placeholder" style="background: linear-gradient(160deg, #1a1a1a, #2a2a2a);">
+            <span class="product-card__silhouette">T</span>
+          </div>
+          <span class="product-card__badge">New</span>
+        </div>
+        <div class="product-card__info">
+          <h3 class="product-card__name">CYFER Logo Tee</h3>
+          <p class="product-card__detail">White / S, M, L, XL</p>
+          <p class="product-card__price">&yen;8,800</p>
+        </div>
+      </a>
+
+      <!-- 商品2: オーバーサイズフーディ -->
+      <a href="#" class="product-card">
+        <div class="product-card__image">
+          <div class="product-card__placeholder" style="background: linear-gradient(160deg, #1e1e1e, #333);">
+            <span class="product-card__silhouette">H</span>
+          </div>
+        </div>
+        <div class="product-card__info">
+          <h3 class="product-card__name">Oversized Hoodie</h3>
+          <p class="product-card__detail">Black / M, L, XL</p>
+          <p class="product-card__price">&yen;14,800</p>
+        </div>
+      </a>
+
+      <!-- 商品3: ワイドカーゴパンツ -->
+      <a href="#" class="product-card">
+        <div class="product-card__image">
+          <div class="product-card__placeholder" style="background: linear-gradient(160deg, #222, #2e2e2e);">
+            <span class="product-card__silhouette">P</span>
+          </div>
+          <span class="product-card__badge">Bestseller</span>
+        </div>
+        <div class="product-card__info">
+          <h3 class="product-card__name">Wide Cargo Pants</h3>
+          <p class="product-card__detail">Charcoal / S, M, L</p>
+          <p class="product-card__price">&yen;12,400</p>
+        </div>
+      </a>
+
+    </div>
+  </section>
+
+  <!-- ===== フッター ===== -->
+  <footer class="footer">
+    <p class="footer__text">&copy; 2026 CYFER. All rights reserved.</p>
+  </footer>
+
+</body>
+</html>

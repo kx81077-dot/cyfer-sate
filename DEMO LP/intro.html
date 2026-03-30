@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>CYFER</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #000;
+      touch-action: none;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+      font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+    }
+
+    /* ============================
+       ゲームフェーズ — Three.js
+    ============================ */
+    #game-phase {
+      position: fixed;
+      inset: 0;
+      z-index: 10;
+    }
+
+    #game-phase canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    #hud {
+      position: fixed;
+      bottom: 28px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 12px;
+      z-index: 12;
+      pointer-events: none;
+    }
+
+    .hud-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.35);
+      background: transparent;
+      transition: background 0.3s, box-shadow 0.3s;
+    }
+
+    .hud-dot.active {
+      background: #fff;
+      box-shadow: 0 0 8px rgba(255,255,255,0.6);
+    }
+
+    #hint {
+      position: fixed;
+      top: 32px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: rgba(255,255,255,0.35);
+      font-size: 11px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      z-index: 12;
+      pointer-events: none;
+      transition: opacity 0.6s;
+    }
+
+    #glitch-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 20;
+      pointer-events: none;
+      opacity: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(255,255,255,0.03) 2px,
+        rgba(255,255,255,0.03) 4px
+      );
+      mix-blend-mode: overlay;
+    }
+
+    /* 白フラッシュ — ゲームとショップの間の橋 */
+    #transition-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 50;
+      background: #fff;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    /* ============================
+       ショップフェーズ
+    ============================ */
+    #shop-phase {
+      position: fixed;
+      inset: 0;
+      z-index: 5;
+      background: #000;
+      overflow-y: auto;
+      overflow-x: hidden;
+      opacity: 0;
+      visibility: hidden;
+      transition: none;
+      -webkit-overflow-scrolling: touch;
+      touch-action: pan-y;
+    }
+
+    #shop-phase.visible {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    /* ショップ — ヘッダー */
+    .shop-header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 20px;
+      background: rgba(0,0,0,0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .shop-logo {
+      font-size: 20px;
+      font-weight: 600;
+      letter-spacing: 6px;
+      color: #fff;
+    }
+
+    .shop-bag {
+      font-size: 11px;
+      letter-spacing: 2px;
+      color: rgba(255,255,255,0.5);
+      background: none;
+      border: 1px solid rgba(255,255,255,0.15);
+      padding: 6px 14px;
+      cursor: pointer;
+    }
+
+    /* ショップ — ヒーロー */
+    .shop-hero {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 80px 20px 48px;
+      text-align: center;
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+
+    .shop-hero.animate-in {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .shop-hero__brand {
+      font-size: clamp(42px, 12vw, 72px);
+      font-weight: 300;
+      letter-spacing: 16px;
+      color: #fff;
+      margin-bottom: 12px;
+    }
+
+    .shop-hero__sub {
+      font-size: 11px;
+      letter-spacing: 4px;
+      color: rgba(255,255,255,0.35);
+      text-transform: uppercase;
+    }
+
+    .shop-hero__line {
+      width: 32px;
+      height: 1px;
+      background: rgba(255,255,255,0.15);
+      margin: 24px auto;
+    }
+
+    /* ショップ — コレクションラベル */
+    .shop-section-label {
+      padding: 0 20px;
+      margin-bottom: 20px;
+      font-size: 10px;
+      letter-spacing: 4px;
+      color: rgba(255,255,255,0.3);
+      text-transform: uppercase;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease 0.15s, transform 0.6s ease 0.15s;
+    }
+
+    .shop-section-label.animate-in {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ショップ — 商品グリッド */
+    .shop-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2px;
+      padding: 0 2px;
+    }
+
+    .shop-item {
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .shop-item.animate-in {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .shop-item__image {
+      width: 100%;
+      aspect-ratio: 3/4;
+      display: block;
+    }
+
+    .shop-item__overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(transparent 50%, rgba(0,0,0,0.7));
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .shop-item:active .shop-item__overlay {
+      opacity: 1;
+    }
+
+    .shop-item__info {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 16px 12px;
+    }
+
+    .shop-item__name {
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: 1px;
+      color: #fff;
+      margin-bottom: 4px;
+    }
+
+    .shop-item__price {
+      font-size: 11px;
+      color: rgba(255,255,255,0.5);
+      letter-spacing: 0.5px;
+    }
+
+    .shop-item__badge {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      font-size: 9px;
+      letter-spacing: 2px;
+      color: #000;
+      background: #fff;
+      padding: 3px 8px;
+    }
+
+    /* ショップ — フッター */
+    .shop-footer {
+      padding: 48px 20px 32px;
+      text-align: center;
+      opacity: 0;
+      transition: opacity 0.6s ease 0.3s;
+    }
+
+    .shop-footer.animate-in {
+      opacity: 1;
+    }
+
+    .shop-footer__logo {
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 6px;
+      color: rgba(255,255,255,0.2);
+      margin-bottom: 12px;
+    }
+
+    .shop-footer__copy {
+      font-size: 10px;
+      color: rgba(255,255,255,0.15);
+      letter-spacing: 1px;
+    }
+
+    /* タブレット以上 */
+    @media (min-width: 600px) {
+      .shop-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 3px;
+        padding: 0 3px;
+      }
+    }
+
+    @media (min-width: 900px) {
+      .shop-grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 4px;
+        padding: 0 4px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ============================
+       フェーズ1: Three.js ゲーム
+  ============================ -->
+  <div id="game-phase">
+    <div id="hint">TAP THE GLOWING SHAPE</div>
+    <div id="hud">
+      <div class="hud-dot" data-index="0"></div>
+      <div class="hud-dot" data-index="1"></div>
+      <div class="hud-dot" data-index="2"></div>
+      <div class="hud-dot" data-index="3"></div>
+      <div class="hud-dot" data-index="4"></div>
+    </div>
+    <div id="glitch-overlay"></div>
+  </div>
+
+  <!-- 白フラッシュ（両フェーズの上に重なる） -->
+  <div id="transition-overlay"></div>
+
+  <!-- ============================
+       フェーズ2: ショップ（初期非表示）
+  ============================ -->
+  <div id="shop-phase">
+    <header class="shop-header">
+      <span class="shop-logo">CYFER</span>
+      <button class="shop-bag">BAG (0)</button>
+    </header>
+
+    <div class="shop-hero">
+      <h1 class="shop-hero__brand">CYFER</h1>
+      <p class="shop-hero__sub">2026 Collection</p>
+      <div class="shop-hero__line"></div>
+    </div>
+
+    <p class="shop-section-label">New Arrivals</p>
+
+    <div class="shop-grid">
+      <!-- 商品1 -->
+      <div class="shop-item" style="transition-delay: 0.2s">
+        <svg class="shop-item__image" viewBox="0 0 300 400" xmlns="http://www.w3.org/2000/svg">
+          <rect width="300" height="400" fill="#1a1a1a"/>
+          <rect x="100" y="80" width="100" height="140" rx="2" fill="none" stroke="#333" stroke-width="1"/>
+          <line x1="130" y1="80" x2="130" y2="60" stroke="#333" stroke-width="1"/>
+          <line x1="170" y1="80" x2="170" y2="60" stroke="#333" stroke-width="1"/>
+          <path d="M130 60 Q150 45 170 60" fill="none" stroke="#333" stroke-width="1"/>
+          <line x1="100" y1="120" x2="200" y2="120" stroke="#333" stroke-width="0.5"/>
+        </svg>
+        <div class="shop-item__overlay"></div>
+        <span class="shop-item__badge">NEW</span>
+        <div class="shop-item__info">
+          <p class="shop-item__name">Minimal Tee</p>
+          <p class="shop-item__price">&yen;8,800</p>
+        </div>
+      </div>
+
+      <!-- 商品2 -->
+      <div class="shop-item" style="transition-delay: 0.3s">
+        <svg class="shop-item__image" viewBox="0 0 300 400" xmlns="http://www.w3.org/2000/svg">
+          <rect width="300" height="400" fill="#141414"/>
+          <rect x="90" y="100" width="120" height="180" rx="2" fill="none" stroke="#333" stroke-width="1"/>
+          <line x1="150" y1="100" x2="150" y2="280" stroke="#333" stroke-width="0.5"/>
+          <line x1="90" y1="190" x2="210" y2="190" stroke="#333" stroke-width="0.5"/>
+          <circle cx="150" cy="115" r="3" fill="none" stroke="#333" stroke-width="0.5"/>
+        </svg>
+        <div class="shop-item__overlay"></div>
+        <div class="shop-item__info">
+          <p class="shop-item__name">Structured Jacket</p>
+          <p class="shop-item__price">&yen;32,000</p>
+        </div>
+      </div>
+
+      <!-- 商品3 -->
+      <div class="shop-item" style="transition-delay: 0.4s">
+        <svg class="shop-item__image" viewBox="0 0 300 400" xmlns="http://www.w3.org/2000/svg">
+          <rect width="300" height="400" fill="#111"/>
+          <rect x="105" y="80" width="90" height="220" rx="2" fill="none" stroke="#333" stroke-width="1"/>
+          <line x1="150" y1="80" x2="150" y2="100" stroke="#333" stroke-width="0.5"/>
+          <line x1="105" y1="160" x2="195" y2="160" stroke="#333" stroke-width="0.5"/>
+          <line x1="105" y1="300" x2="140" y2="300" stroke="#333" stroke-width="0.5"/>
+          <line x1="160" y1="300" x2="195" y2="300" stroke="#333" stroke-width="0.5"/>
+        </svg>
+        <div class="shop-item__overlay"></div>
+        <span class="shop-item__badge">NEW</span>
+        <div class="shop-item__info">
+          <p class="shop-item__name">Wide Trousers</p>
+          <p class="shop-item__price">&yen;18,500</p>
+        </div>
+      </div>
+
+      <!-- 商品4 -->
+      <div class="shop-item" style="transition-delay: 0.5s">
+        <svg class="shop-item__image" viewBox="0 0 300 400" xmlns="http://www.w3.org/2000/svg">
+          <rect width="300" height="400" fill="#181818"/>
+          <ellipse cx="150" cy="200" rx="60" ry="80" fill="none" stroke="#333" stroke-width="1"/>
+          <line x1="120" y1="130" x2="120" y2="340" stroke="#333" stroke-width="0.5"/>
+          <line x1="180" y1="130" x2="180" y2="340" stroke="#333" stroke-width="0.5"/>
+          <path d="M120 130 Q150 100 180 130" fill="none" stroke="#333" stroke-width="1"/>
+        </svg>
+        <div class="shop-item__overlay"></div>
+        <div class="shop-item__info">
+          <p class="shop-item__name">Leather Tote</p>
+          <p class="shop-item__price">&yen;24,000</p>
+        </div>
+      </div>
+
+      <!-- 商品5 -->
+      <div class="shop-item" style="transition-delay: 0.6s">
+        <svg class="shop-item__image" viewBox="0 0 300 400" xmlns="http://www.w3.org/2000/svg">
+          <rect width="300" height="400" fill="#1a1a1a"/>
+          <rect x="85" y="90" width="130" height="160" rx="50" fill="none" stroke="#333" stroke-width="1"/>
+          <line x1="85" y1="170" x2="60" y2="250" stroke="#333" stroke-width="1"/>
+          <line x1="215" y1="170" x2="240" y2="250" stroke="#333" stroke-width="1"/>
+          <line x1="100" y1="250" x2="200" y2="250" stroke="#333" stroke-width="0.5"/>
+          <line x1="150" y1="250" x2="150" y2="310" stroke="#333" stroke-width="0.5"/>
+        </svg>
+        <div class="shop-item__overlay"></div>
+        <div class="shop-item__info">
+          <p class="shop-item__name">Oversized Hoodie</p>
+          <p class="shop-item__price">&yen;14,200</p>
+        </div>
+      </div>
+
+      <!-- 商品6 -->
+      <div class="shop-item" style="transition-delay: 0.7s">
+        <svg class="shop-item__image" viewBox="0 0 300 400" xmlns="http://www.w3.org/2000/svg">
+          <rect width="300" height="400" fill="#151515"/>
+          <circle cx="150" cy="160" r="50" fill="none" stroke="#333" stroke-width="1"/>
+          <circle cx="150" cy="160" r="20" fill="none" stroke="#333" stroke-width="0.5"/>
+          <line x1="150" y1="210" x2="150" y2="240" stroke="#333" stroke-width="0.5"/>
+          <line x1="100" y1="160" x2="200" y2="160" stroke="#333" stroke-width="0.3"/>
+        </svg>
+        <div class="shop-item__overlay"></div>
+        <span class="shop-item__badge">NEW</span>
+        <div class="shop-item__info">
+          <p class="shop-item__name">Silver Chain</p>
+          <p class="shop-item__price">&yen;6,800</p>
+        </div>
+      </div>
+    </div>
+
+    <footer class="shop-footer">
+      <p class="shop-footer__logo">CYFER</p>
+      <p class="shop-footer__copy">&copy; 2026 CYFER. All rights reserved.</p>
+    </footer>
+  </div>
+
+  <!-- Three.js via CDN (ES module) -->
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.163.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.163.0/examples/jsm/"
+    }
+  }
+  </script>
+  <script type="module" src="intro.js"></script>
+</body>
+</html>

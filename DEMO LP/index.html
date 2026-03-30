@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NOIR — 2026 Spring Collection</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500&family=Noto+Sans+JP:wght@300;400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- ===== CUSTOM CURSOR ===== -->
+  <div class="cursor" id="cursor">
+    <div class="cursor__dot"></div>
+    <div class="cursor__ring"></div>
+  </div>
+
+  <!-- ===== LOADING SCREEN ===== -->
+  <div class="loader" id="loader">
+    <div class="loader__inner">
+      <div class="loader__logo">NOIR</div>
+      <div class="loader__bar">
+        <div class="loader__progress"></div>
+      </div>
+      <p class="loader__text">Loading Experience</p>
+    </div>
+  </div>
+
+  <!-- ===== NAVIGATION ===== -->
+  <nav class="nav" id="nav">
+    <div class="nav__logo">
+      <span class="nav__logo-text">NOIR</span>
+    </div>
+    <ul class="nav__links">
+      <li><a href="#collection" data-hover="Collection">Collection</a></li>
+      <li><a href="#lookbook" data-hover="Lookbook">Lookbook</a></li>
+      <li><a href="#about" data-hover="About">About</a></li>
+    </ul>
+    <div class="nav__right">
+      <button class="nav__cart" aria-label="Cart">BAG (0)</button>
+      <button class="nav__menu" id="menuToggle" aria-label="Menu">
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ===== MOBILE MENU ===== -->
+  <div class="mobile-menu" id="mobileMenu">
+    <div class="mobile-menu__inner">
+      <a href="#collection" class="mobile-menu__link">Collection</a>
+      <a href="#lookbook" class="mobile-menu__link">Lookbook</a>
+      <a href="#about" class="mobile-menu__link">About</a>
+      <a href="#contact" class="mobile-menu__link">Contact</a>
+    </div>
+  </div>
+
+  <!-- ===== HERO — CINEMATIC VIDEO SECTION ===== -->
+  <section class="hero" id="hero">
+    <div class="hero__video-wrap">
+      <video class="hero__video" autoplay muted loop playsinline>
+        <source src="hero-video.mp4" type="video/mp4">
+      </video>
+      <div class="hero__fallback"></div>
+    </div>
+
+    <!-- Multiple overlay layers for depth -->
+    <div class="hero__overlay"></div>
+    <div class="hero__noise"></div>
+    <div class="hero__vignette"></div>
+
+    <!-- Floating particles -->
+    <canvas class="hero__particles" id="particles"></canvas>
+
+    <div class="hero__content">
+      <div class="hero__subtitle-wrap">
+        <p class="hero__subtitle">
+          <span class="char-wrap"><span class="char">2</span></span>
+          <span class="char-wrap"><span class="char">0</span></span>
+          <span class="char-wrap"><span class="char">2</span></span>
+          <span class="char-wrap"><span class="char">6</span></span>
+          <span class="char-spacer"></span>
+          <span class="char-wrap"><span class="char">S</span></span>
+          <span class="char-wrap"><span class="char">P</span></span>
+          <span class="char-wrap"><span class="char">R</span></span>
+          <span class="char-wrap"><span class="char">I</span></span>
+          <span class="char-wrap"><span class="char">N</span></span>
+          <span class="char-wrap"><span class="char">G</span></span>
+        </p>
+      </div>
+      <h1 class="hero__title">
+        <span class="hero__title-line">
+          <span class="hero__title-word" data-parallax="0.05">Define</span>
+        </span>
+        <span class="hero__title-line">
+          <span class="hero__title-word" data-parallax="0.08">Your</span>
+        </span>
+        <span class="hero__title-line">
+          <span class="hero__title-word hero__title-word--italic" data-parallax="0.12">Silence</span>
+        </span>
+      </h1>
+      <div class="hero__cta-wrap">
+        <a href="#collection" class="hero__cta">
+          <span class="hero__cta-text">Explore Collection</span>
+          <span class="hero__cta-arrow">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+              <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+          </span>
+        </a>
+      </div>
+    </div>
+
+    <div class="hero__scroll-indicator">
+      <span class="hero__scroll-text">Scroll</span>
+      <span class="hero__scroll-line"></span>
+    </div>
+
+    <!-- Side decorative elements -->
+    <div class="hero__side-text hero__side-text--left">SPRING / SUMMER 2026</div>
+    <div class="hero__side-text hero__side-text--right">TOKYO — PARIS — LONDON</div>
+  </section>
+
+  <!-- ===== MARQUEE ===== -->
+  <div class="marquee">
+    <div class="marquee__track">
+      <span>NEW ARRIVALS ✦ SPRING 2026 ✦ FREE SHIPPING OVER ¥10,000 ✦ SUSTAINABLE MATERIALS ✦ NEW ARRIVALS ✦ SPRING 2026 ✦ FREE SHIPPING OVER ¥10,000 ✦ SUSTAINABLE MATERIALS ✦&nbsp;</span>
+      <span>NEW ARRIVALS ✦ SPRING 2026 ✦ FREE SHIPPING OVER ¥10,000 ✦ SUSTAINABLE MATERIALS ✦ NEW ARRIVALS ✦ SPRING 2026 ✦ FREE SHIPPING OVER ¥10,000 ✦ SUSTAINABLE MATERIALS ✦&nbsp;</span>
+    </div>
+  </div>
+
+  <!-- ===== FEATURED (HORIZONTAL SCROLL) ===== -->
+  <section class="featured">
+    <div class="featured__header">
+      <span class="featured__label">Featured</span>
+      <h2 class="featured__title">Season Highlights</h2>
+    </div>
+    <div class="featured__carousel" id="featuredCarousel">
+      <div class="featured__track">
+        <div class="featured__item">
+          <div class="featured__image" style="background: linear-gradient(160deg, #e8d5c4, #f2e6da);">
+            <span class="featured__number">01</span>
+          </div>
+          <p class="featured__name">Linen Collection</p>
+        </div>
+        <div class="featured__item">
+          <div class="featured__image" style="background: linear-gradient(160deg, #3a2820, #5a4035);">
+            <span class="featured__number">02</span>
+          </div>
+          <p class="featured__name">Essential Brown</p>
+        </div>
+        <div class="featured__item">
+          <div class="featured__image" style="background: linear-gradient(160deg, #8a9a6c, #a8b88a);">
+            <span class="featured__number">03</span>
+          </div>
+          <p class="featured__name">Earth Tones</p>
+        </div>
+        <div class="featured__item">
+          <div class="featured__image" style="background: linear-gradient(160deg, #c2847a, #daa89e);">
+            <span class="featured__number">04</span>
+          </div>
+          <p class="featured__name">Sunset Rose</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== COLLECTION / PRODUCTS ===== -->
+  <section class="collection" id="collection">
+    <header class="collection__header">
+      <div class="collection__title-area">
+        <span class="collection__label" data-animate="fade-up">Our Products</span>
+        <h2 class="section-title" data-animate="fade-up">Collection</h2>
+      </div>
+      <div class="collection__filters" data-animate="fade-up" data-delay="200">
+        <button class="filter-btn active" data-filter="all">All</button>
+        <button class="filter-btn" data-filter="tops">Tops</button>
+        <button class="filter-btn" data-filter="bottoms">Bottoms</button>
+        <button class="filter-btn" data-filter="outerwear">Outerwear</button>
+        <button class="filter-btn" data-filter="accessories">Accessories</button>
+      </div>
+    </header>
+
+    <div class="product-grid">
+
+      <!-- Product 1 -->
+      <article class="product-card" data-category="tops" data-animate="fade-up">
+        <div class="product-card__image">
+          <div class="product-card__placeholder" style="background: linear-gradient(135deg, #e8d5c4, #f2e6da);"></div>
+          <div class="product-card__overlay-img"></div>
+          <span class="product-card__badge">NEW</span>
+          <div class="product-card__actions">
+            <button class="product-card__action-btn" aria-label="Wishlist">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+            </button>
+            <button class="product-card__quick">Quick View</button>
+          </div>
+        </div>
+        <div class="product-card__info">
+          <div>
+            <h3 class="product-card__name">Oversized Linen Shirt</h3>
+            <p class="product-card__detail">Ivory / S, M, L, XL</p>
+          </div>
+          <p class="product-card__price">¥12,800</p>
+        </div>
+      </article>
+
+      <!-- Product 2 -->
+      <article class="product-card" data-category="bottoms" data-animate="fade-up" data-delay="100">
+        <div class="product-card__image">
+          <div class="product-card__placeholder" style="background: linear-gradient(135deg, #3a2820, #5a4035);"></div>
+          <div class="product-card__overlay-img"></div>
+          <div class="product-card__actions">
+            <button class="product-card__action-btn" aria-label="Wishlist">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+            </button>
+            <button class="product-card__quick">Quick View</button>
+          </div>
+        </div>
+        <div class="product-card__info">
+          <div>
+            <h3 class="product-card__name">Wide Tapered Trousers</h3>
+            <p class="product-card__detail">Black / S, M, L</p>
+          </div>
+          <p class="product-card__price">¥15,400</p>
+        </div>
+      </article>
+
+      <!-- Product 3 -->
+      <article class="product-card product-card--large" data-category="outerwear" data-animate="fade-up" data-delay="200">
+        <div class="product-card__image">
+          <div class="product-card__placeholder" style="background: linear-gradient(135deg, #c47d5a, #d4a07a);"></div>
+          <div class="product-card__overlay-img"></div>
+          <span class="product-card__badge product-card__badge--accent">BESTSELLER</span>
+          <div class="product-card__actions">
+            <button class="product-card__action-btn" aria-label="Wishlist">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+            </button>
+            <button class="product-card__quick">Quick View</button>
+          </div>
+        </div>
+        <div class="product-card__info">
+          <div>
+            <h3 class="product-card__name">Deconstructed Trench</h3>
+            <p class="product-card__detail">Sand / M, L, XL</p>
+          </div>
+          <p class="product-card__price">¥38,000</p>
+        </div>
+      </article>
+
+      <!-- Product 4 -->
+      <article class="product-card" data-category="tops" data-animate="fade-up" data-delay="300">
+        <div class="product-card__image">
+          <div class="product-card__placeholder" style="background: linear-gradient(135deg, #c2847a, #daa89e);"></div>
+          <div class="product-card__overlay-img"></div>
+          <span class="product-card__badge">NEW</span>
+          <div class="product-card__actions">
+            <button class="product-card__action-btn" aria-label="Wishlist">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+            </button>
+            <button class="product-card__quick">Quick View</button>
+          </div>
+        </div>
+        <div class="product-card__info">
+          <div>
+            <h3 class="product-card__name">Cropped Knit Vest</h3>
+            <p class="product-card__detail">Cream / Free Size</p>
+          </div>
+          <p class="product-card__price">¥9,600</p>
+        </div>
+      </article>
+
+      <!-- Product 5 -->
+      <article class="product-card" data-category="accessories" data-animate="fade-up">
+        <div class="product-card__image">
+          <div class="product-card__placeholder" style="background: linear-gradient(135deg, #2a1e18, #4a3530);"></div>
+          <div class="product-card__overlay-img"></div>
+          <span class="product-card__badge">NEW</span>
+          <div class="product-card__actions">
+            <button class="product-card__action-btn" aria-label="Wishlist">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+            </button>
+            <button class="product-card__quick">Quick View</button>
+          </div>
+        </div>
+        <div class="product-card__info">
+          <div>
+            <h3 class="product-card__name">Leather Tote Bag</h3>
+            <p class="product-card__detail">Black / One Size</p>
+          </div>
+          <p class="product-card__price">¥24,000</p>
+        </div>
+      </article>
+
+      <!-- Product 6 -->
+      <article class="product-card" data-category="bottoms" data-animate="fade-up" data-delay="100">
+        <div class="product-card__image">
+          <div class="product-card__placeholder" style="background: linear-gradient(135deg, #8a9a6c, #a8b88a);"></div>
+          <div class="product-card__overlay-img"></div>
+          <div class="product-card__actions">
+            <button class="product-card__action-btn" aria-label="Wishlist">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+            </button>
+            <button class="product-card__quick">Quick View</button>
+          </div>
+        </div>
+        <div class="product-card__info">
+          <div>
+            <h3 class="product-card__name">Relaxed Cargo Pants</h3>
+            <p class="product-card__detail">Beige / S, M, L</p>
+          </div>
+          <p class="product-card__price">¥14,200</p>
+        </div>
+      </article>
+
+      <!-- Product 7 -->
+      <article class="product-card product-card--large" data-category="outerwear" data-animate="fade-up" data-delay="200">
+        <div class="product-card__image">
+          <div class="product-card__placeholder" style="background: linear-gradient(135deg, #4a3530, #6b504a);"></div>
+          <div class="product-card__overlay-img"></div>
+          <div class="product-card__actions">
+            <button class="product-card__action-btn" aria-label="Wishlist">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+            </button>
+            <button class="product-card__quick">Quick View</button>
+          </div>
+        </div>
+        <div class="product-card__info">
+          <div>
+            <h3 class="product-card__name">Minimal Bomber Jacket</h3>
+            <p class="product-card__detail">Charcoal / M, L, XL</p>
+          </div>
+          <p class="product-card__price">¥29,800</p>
+        </div>
+      </article>
+
+      <!-- Product 8 -->
+      <article class="product-card" data-category="accessories" data-animate="fade-up" data-delay="300">
+        <div class="product-card__image">
+          <div class="product-card__placeholder" style="background: linear-gradient(135deg, #d4956e, #e8b898);"></div>
+          <div class="product-card__overlay-img"></div>
+          <div class="product-card__actions">
+            <button class="product-card__action-btn" aria-label="Wishlist">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+            </button>
+            <button class="product-card__quick">Quick View</button>
+          </div>
+        </div>
+        <div class="product-card__info">
+          <div>
+            <h3 class="product-card__name">Silver Chain Necklace</h3>
+            <p class="product-card__detail">Silver / 45cm, 50cm</p>
+          </div>
+          <p class="product-card__price">¥6,800</p>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- ===== LOOKBOOK PARALLAX SECTION ===== -->
+  <section class="lookbook" id="lookbook">
+    <div class="lookbook__visual" data-parallax-bg>
+      <div class="lookbook__placeholder"></div>
+      <div class="lookbook__glitch"></div>
+    </div>
+    <div class="lookbook__content">
+      <div class="lookbook__content-inner" data-animate="fade-up">
+        <p class="lookbook__label">Lookbook 2026</p>
+        <h2 class="lookbook__title">Minimal by Nature,<br><em>Bold by Design</em></h2>
+        <p class="lookbook__text">
+          私たちは「沈黙の美しさ」をテーマに、余計な装飾を削ぎ落としたデザインで、
+          着る人の個性を最大限に引き出すアパレルを展開しています。
+        </p>
+        <a href="#" class="lookbook__link">
+          <span>View Full Lookbook</span>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== ABOUT / BRAND STORY ===== -->
+  <section class="about" id="about">
+    <div class="about__inner">
+      <div class="about__stats" data-animate="fade-up">
+        <div class="about__stat">
+          <span class="about__stat-number" data-count="2019">0</span>
+          <span class="about__stat-label">Founded</span>
+        </div>
+        <div class="about__stat">
+          <span class="about__stat-number" data-count="340">0</span>
+          <span class="about__stat-suffix">+</span>
+          <span class="about__stat-label">Products</span>
+        </div>
+        <div class="about__stat">
+          <span class="about__stat-number" data-count="12">0</span>
+          <span class="about__stat-label">Countries</span>
+        </div>
+        <div class="about__stat">
+          <span class="about__stat-number" data-count="98">0</span>
+          <span class="about__stat-suffix">%</span>
+          <span class="about__stat-label">Sustainable</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== NEWSLETTER ===== -->
+  <section class="newsletter" id="contact">
+    <div class="newsletter__bg"></div>
+    <div class="newsletter__inner" data-animate="fade-up">
+      <p class="newsletter__label">Newsletter</p>
+      <h2 class="newsletter__title">Stay in the Loop</h2>
+      <p class="newsletter__text">新作情報・限定アイテムをいち早くお届け</p>
+      <form class="newsletter__form">
+        <input type="email" placeholder="Your email address" class="newsletter__input" required>
+        <button type="submit" class="newsletter__btn">
+          <span>Subscribe</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+        </button>
+      </form>
+    </div>
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="footer">
+    <div class="footer__inner">
+      <div class="footer__top">
+        <div class="footer__brand">
+          <span class="footer__logo">NOIR</span>
+          <p class="footer__tagline">Define Your Silence</p>
+        </div>
+        <div class="footer__grid">
+          <div class="footer__col">
+            <h4 class="footer__col-title">Shop</h4>
+            <a href="#">New Arrivals</a>
+            <a href="#">Tops</a>
+            <a href="#">Bottoms</a>
+            <a href="#">Outerwear</a>
+            <a href="#">Accessories</a>
+          </div>
+          <div class="footer__col">
+            <h4 class="footer__col-title">Info</h4>
+            <a href="#">About Us</a>
+            <a href="#">Sustainability</a>
+            <a href="#">Size Guide</a>
+            <a href="#">FAQ</a>
+          </div>
+          <div class="footer__col">
+            <h4 class="footer__col-title">Connect</h4>
+            <a href="#">Instagram</a>
+            <a href="#">Twitter / X</a>
+            <a href="#">Pinterest</a>
+            <a href="#">Contact</a>
+          </div>
+        </div>
+      </div>
+      <div class="footer__bottom">
+        <p class="footer__copy">&copy; 2026 NOIR. All rights reserved.</p>
+        <div class="footer__legal">
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Service</a>
+          <a href="#">特定商取引法に基づく表記</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
